@@ -1,0 +1,3 @@
+rust/target/
+c/toysh
+rust/Cargo.lock
