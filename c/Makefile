@@ -1,4 +1,4 @@
-CFLAGS=-std=c11 -g
+CFLAGS=-std=c11 -Os -s
 
 toysh: toysh.c
 

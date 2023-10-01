@@ -1,23 +1,22 @@
-#include <sys/wait.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
 #define toysh_TOK_BUFSIZE 64
 #define toysh_TOK_DELIM " \t\r\n\a"
 #define toysh_RL_BUFSIZE 1024
 
-char *toysh_read_line(void)
-{
+char *toysh_read_line(void) {
   char *line = NULL;
   ssize_t bufsize = 0; // have getline allocate a buffer for us
 
-  if (getline(&line, &bufsize, stdin) == -1){
+  if (getline(&line, &bufsize, stdin) == -1) {
     if (feof(stdin)) {
-      exit(EXIT_SUCCESS);  // We recieved an EOF
-    } else  {
+      exit(EXIT_SUCCESS); // We recieved an EOF
+    } else {
       perror("readline");
       exit(EXIT_FAILURE);
     }
@@ -26,10 +25,9 @@ char *toysh_read_line(void)
   return line;
 }
 
-char **toysh_split_line(char *line)
-{
+char **toysh_split_line(char *line) {
   int bufsize = toysh_TOK_BUFSIZE, position = 0;
-  char **tokens = malloc(bufsize * sizeof(char*));
+  char **tokens = malloc(bufsize * sizeof(char *));
   char *token;
 
   if (!tokens) {
@@ -44,7 +42,7 @@ char **toysh_split_line(char *line)
 
     if (position >= bufsize) {
       bufsize += toysh_TOK_BUFSIZE;
-      tokens = realloc(tokens, bufsize * sizeof(char*));
+      tokens = realloc(tokens, bufsize * sizeof(char *));
       if (!tokens) {
         fprintf(stderr, "toysh: allocation error\n");
         exit(EXIT_FAILURE);
@@ -57,8 +55,7 @@ char **toysh_split_line(char *line)
   return tokens;
 }
 
-int toysh_launch(char **args)
-{
+int toysh_launch(char **args) {
   pid_t pid, wpid;
   int status;
 
@@ -92,27 +89,16 @@ int toysh_exit(char **args);
 /*
   List of builtin commands, followed by their corresponding functions.
  */
-char *builtin_str[] = {
-  "cd",
-  "help",
-  "exit"
-};
+char *builtin_str[] = {"cd", "help", "exit"};
 
-int (*builtin_func[]) (char **) = {
-  &toysh_cd,
-  &toysh_help,
-  &toysh_exit
-};
+int (*builtin_func[])(char **) = {&toysh_cd, &toysh_help, &toysh_exit};
 
-int toysh_num_builtins() {
-  return sizeof(builtin_str) / sizeof(char *);
-}
+int toysh_num_builtins() { return sizeof(builtin_str) / sizeof(char *); }
 
 /*
   Builtin function implementations.
 */
-int toysh_cd(char **args)
-{
+int toysh_cd(char **args) {
   if (args[1] == NULL) {
     fprintf(stderr, "toysh: expected argument to \"cd\"\n");
   } else {
@@ -123,8 +109,7 @@ int toysh_cd(char **args)
   return 1;
 }
 
-int toysh_help(char **args)
-{
+int toysh_help(char **args) {
   int i;
   printf("Stephen Brennan's toysh\n");
   printf("Type program names and arguments, and hit enter.\n");
@@ -138,13 +123,9 @@ int toysh_help(char **args)
   return 1;
 }
 
-int toysh_exit(char **args)
-{
-  return 0;
-}
+int toysh_exit(char **args) { return 0; }
 
-int toysh_execute(char **args)
-{
+int toysh_execute(char **args) {
   int i;
 
   if (args[0] == NULL) {
@@ -162,23 +143,23 @@ int toysh_execute(char **args)
 }
 
 void toysh_loop() {
-    char *line;
-    char **args;
-    int status;
+  char *line;
+  char **args;
+  int status;
 
-    do {
-        printf("> ");
-        line = toysh_read_line();
-        args = toysh_split_line(line);
-        status =  toysh_execute(args);
+  do {
+    printf("> ");
+    line = toysh_read_line();
+    args = toysh_split_line(line);
+    status = toysh_execute(args);
 
-        free(line);
-        free(args);
-    } while(status);
+    free(line);
+    free(args);
+  } while (status);
 }
 
 int main() {
-    // Load config files, if any.
+  // Load config files, if any.
 
   // Run command loop.
   toysh_loop();
@@ -187,4 +168,3 @@ int main() {
 
   return EXIT_SUCCESS;
 }
-

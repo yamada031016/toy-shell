@@ -25,7 +25,7 @@ fn toysh_help() {
 }
 
 fn toysh_exit() {
-    process::exit(1);
+    process::exit(0);
 }
 
 fn toysh_launch(args: Vec<&str>) {

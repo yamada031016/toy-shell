@@ -1,0 +1,10 @@
+toysh.c:12:toysh_read_line	40	static
+toysh.c:28:toysh_split_line	40	static
+toysh.c:58:toysh_launch	56	static
+toysh.c:101:toysh_cd	24	static
+toysh.c:112:toysh_help	24	static
+toysh.c:126:toysh_exit	8	static
+toysh.c:96:toysh_num_builtins	8	static
+toysh.c:128:toysh_execute	40	static
+toysh.c:145:toysh_loop	40	static
+toysh.c:161:main	24	static
